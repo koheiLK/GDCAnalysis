@@ -22,7 +22,6 @@ def load_json(input_path, json_name='profile.json'):
         print(file_name + "is correctly loaded")
 
         return json_data
-
     except IOError:
         print("Cannot Open" + file_name)
 
@@ -60,10 +59,44 @@ def save_df(catype, mod, df):
     return
 
 
+def ask_target_dir():
+
+    root_dir = '../data'
+
+    catype_dirs = os.listdir(root_dir)
+
+    while 1:
+        for catype_dir in catype_dirs:
+            if os.path.isdir(os.path.join(root_dir, catype_dir)):
+                print(' - ' + catype_dir)
+
+        catype = input('Input the Cancer Name >>')
+
+        if os.path.exists(os.path.join(root_dir, catype)):
+            break
+        else:
+            print('Directory Not Found. Type again')
+
+    while 1:
+        modality_dirs = os.listdir(os.path.join(root_dir, catype))
+
+        for mod_dir in modality_dirs:
+            if os.path.isdir(os.path.join(root_dir, catype, mod_dir)):
+                print(' - ' + mod_dir)
+
+        modality = input('Input the Modality Name >>')
+
+        if os.path.exists(os.path.join(root_dir, catype, modality)):
+            break
+        else:
+            print('Directory Not Found. Type again')
+
+    return catype, modality
+
+
 if __name__ == "__main__":
 
-    catype = 'TCGA_BRCA'
-    mod = 'RNAseq'
+    catype, mod = ask_target_dir()
 
     input_path = get_input_path(catype, mod)
     json_data = load_json(input_path)
