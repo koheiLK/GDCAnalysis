@@ -19,7 +19,7 @@ def load_json(input_path, json_name='profile.json'):
         json_data = json.load(f)
         f.close()
 
-        print(file_name + "is correctly loaded")
+        print(file_name + " is correctly loaded")
 
         return json_data
     except IOError:
@@ -59,44 +59,27 @@ def save_df(catype, mod, df):
     return
 
 
-def ask_target_dir():
+def ask_target_dir(root_dir):
 
-    root_dir = '../data'
+    while(1):
+        dirs = os.listdir(root_dir)
+        for dir in dirs:
+            if os.path.isdir(os.path.join(root_dir, dir)):
+                print(' - ' + dir)
 
-    catype_dirs = os.listdir(root_dir)
+        target_dir = input('Input the Target Name >>')
 
-    while 1:
-        for catype_dir in catype_dirs:
-            if os.path.isdir(os.path.join(root_dir, catype_dir)):
-                print(' - ' + catype_dir)
-
-        catype = input('Input the Cancer Name >>')
-
-        if os.path.exists(os.path.join(root_dir, catype)):
-            break
-        else:
+        if not os.path.exists(os.path.join(root_dir, target_dir)):
             print('Directory Not Found. Type again')
-
-    while 1:
-        modality_dirs = os.listdir(os.path.join(root_dir, catype))
-
-        for mod_dir in modality_dirs:
-            if os.path.isdir(os.path.join(root_dir, catype, mod_dir)):
-                print(' - ' + mod_dir)
-
-        modality = input('Input the Modality Name >>')
-
-        if os.path.exists(os.path.join(root_dir, catype, modality)):
-            break
         else:
-            print('Directory Not Found. Type again')
-
-    return catype, modality
+            return target_dir
 
 
 if __name__ == "__main__":
 
-    catype, mod = ask_target_dir()
+    root_dir = '../data'
+    catype = ask_target_dir(root_dir)
+    mod = ask_target_dir(os.path.join(root_dir, catype))
 
     input_path = get_input_path(catype, mod)
     json_data = load_json(input_path)
